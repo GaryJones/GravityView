@@ -20,6 +20,7 @@ class GravityView_Admin {
 		require_once( GFCommon::get_base_path() . '/tooltips.php' );
 
 		require_once( GRAVITYVIEW_DIR . 'includes/admin/metaboxes.php' );
+		include_once( GRAVITYVIEW_DIR . 'includes/admin/walkthrough.php' );
 
 		// Filter Admin messages
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
@@ -29,6 +30,8 @@ class GravityView_Admin {
 
 		add_action( 'plugins_loaded', array( $this, 'backend_actions' ) );
 
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts_and_styles' ), 1);
+
 		//Hooks for no-conflict functionality
 	    add_action( 'wp_print_scripts', array( $this, 'no_conflict_scripts' ), 1000);
 	    add_action( 'admin_print_footer_scripts', array( $this, 'no_conflict_scripts' ), 9);
@@ -37,6 +40,25 @@ class GravityView_Admin {
 	    add_action( 'admin_print_styles', array( $this, 'no_conflict_styles' ), 1);
 	    add_action( 'admin_print_footer_scripts', array( $this, 'no_conflict_styles' ), 1);
 	    add_action( 'admin_footer', array( $this, 'no_conflict_styles' ), 1);
+	}
+
+	function register_scripts_and_styles() {
+
+		$script_debug = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
+
+		// Add the GV font (with the Astronaut)
+		wp_register_style( 'gravityview_global', plugins_url('includes/css/admin-global.css', GRAVITYVIEW_FILE), array(), GravityView_Plugin::version );
+
+		wp_register_style( 'gravityview_views_datepicker', plugins_url('includes/css/admin-datepicker.css', GRAVITYVIEW_FILE), GravityView_Plugin::version );
+
+		wp_register_style( 'gravityview_views_styles', plugins_url('includes/css/admin-views.css', GRAVITYVIEW_FILE), array('dashicons', 'wp-jquery-ui-dialog' ), GravityView_Plugin::version );
+
+		wp_register_script( 'gravityview-jquery-cookie', plugins_url('includes/lib/jquery-cookie/jquery.cookie.js', GRAVITYVIEW_FILE), array( 'jquery' ), GravityView_Plugin::version, true );
+
+		//enqueue scripts
+		wp_register_script( 'gravityview_views_scripts', plugins_url('includes/js/admin-views'.$script_debug.'.js', GRAVITYVIEW_FILE), array( 'jquery-ui-tabs', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable', 'jquery-ui-tooltip', 'jquery-ui-dialog', 'gravityview-jquery-cookie'  ), GravityView_Plugin::version, true );
+
+		wp_register_script( 'gravityview-uservoice-widget', plugins_url('includes/js/uservoice'.$script_debug.'.js', GRAVITYVIEW_FILE), array(), GravityView_Plugin::version, true);
 	}
 
 	/**
@@ -187,8 +209,10 @@ class GravityView_Admin {
 			return;
 		}
 
-		// Something's not right; the styles aren't registered.
 		if( !empty( $wp_styles->registered ) )  {
+
+			// Force remove random plugin jQuery styles that start with
+			// wp-jquery or jquery
 			foreach ($wp_styles->registered as $key => $style) {
 				if( preg_match( '/^(?:wp\-)?jquery/ism', $key ) ) {
 					wp_dequeue_style( $key );

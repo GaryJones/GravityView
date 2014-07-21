@@ -64,7 +64,7 @@ class GravityView_Admin_Metaboxes {
 		<p>
 			<?php if ( empty( $current_form ) ) : ?>
 				<?php // render "start fresh" button ?>
-				<a class="button button-primary" href="#gv_start_fresh" title="<?php esc_attr_e( 'Start Fresh', 'gravity-view' ); ?>"><?php esc_html_e( 'Start Fresh', 'gravity-view' ); ?></a>
+				<a class="button button-primary" id="gv_start_fresh_button" href="#gv_start_fresh" title="<?php esc_attr_e( 'Start Fresh', 'gravity-view' ); ?>"><?php esc_html_e( 'Start Fresh', 'gravity-view' ); ?></a>
 
 				<span>&nbsp;<?php esc_html_e( 'or use an existing form', 'gravity-view' ); ?>&nbsp;</span>
 
@@ -219,8 +219,8 @@ class GravityView_Admin_Metaboxes {
 			<div id="gv-view-configuration-tabs">
 
 				<ul class="nav-tab-wrapper">
-					<li><a href="#directory-view" class="nav-tab"><i class="dashicons dashicons-admin-page"></i> <?php esc_html_e( 'Multiple Entries', 'gravity-view' ); ?></a></li>
-					<li><a href="#single-view" class="nav-tab"><i class="dashicons dashicons-media-default"></i> <?php esc_html_e( 'Single Entry', 'gravity-view' ); ?></a></li>
+					<li id="view-configuration-multiple-entries"><a href="#directory-view" class="nav-tab"><i class="dashicons dashicons-admin-page"></i> <?php esc_html_e( 'Multiple Entries', 'gravity-view' ); ?></a></li>
+					<li><a href="#single-view" class="nav-tab" id="view-configuration-single-entry-link"><i class="dashicons dashicons-media-default"></i> <?php esc_html_e( 'Single Entry', 'gravity-view' ); ?></a></li>
 				</ul>
 
 				<div id="directory-view">
@@ -431,7 +431,7 @@ class GravityView_Admin_Metaboxes {
 		// Only show this on GravityView post types.
 		if( false === gravityview_is_admin_page() ) { return; }
 
-		printf('<div class="misc-pub-section gv-shortcode misc-pub-section-last"><i class="dashicons dashicons-editor-code" style="color: #888; left: -1px; font-size: 20px; line-height: 1;"></i> <span>%s</span><div><input type="text" readonly="readonly" value="[gravityview id=\'%d\']" class="code widefat" /><span class="howto">%s</span></div></div>', __( 'Embed Shortcode', 'gravity-view' ), $post->ID, esc_html__( 'Add this shortcode to a post or page to embed this view.', 'gravity-view' ) );
+		printf('<div id="gv-shortcode-helper" class="misc-pub-section gv-shortcode misc-pub-section-last"><i class="dashicons dashicons-editor-code" style="color: #888; left: -1px; font-size: 20px; line-height: 1;"></i> <span>%s</span><div><input type="text" readonly="readonly" value="[gravityview id=\'%d\']" class="code widefat" /><span class="howto">%s</span></div></div>', __( 'Embed Shortcode', 'gravity-view' ), $post->ID, esc_html__( 'Add this shortcode to a post or page to embed this view.', 'gravity-view' ) );
 	}
 
 	/**

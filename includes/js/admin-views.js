@@ -542,6 +542,7 @@
 			vcfg.toggleDropMessage();
 			vcfg.init_droppables();
 			vcfg.init_tooltips();
+			$('body').trigger( 'gv-show-view-config');
 		},
 
 
@@ -958,6 +959,9 @@
 
 				// When the tab is activated, set a new cookie
 				$.cookie(cookie_key, ui.newTab.index(), { path: gvGlobals.cookiepath });
+			},
+			create: function( event, ui ) {
+				$('body').trigger('gv-tabscreate');
 			}
 		});
 
