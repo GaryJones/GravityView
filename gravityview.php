@@ -84,6 +84,7 @@ final class GravityView_Plugin {
 
 	public function __construct() {
 
+		require_once( GRAVITYVIEW_DIR .'includes/class-capabilities.php' );
 		require_once( GRAVITYVIEW_DIR .'includes/class-admin.php' );
 
 		// If Gravity Forms doesn't exist or is outdated, load the admin view class to
